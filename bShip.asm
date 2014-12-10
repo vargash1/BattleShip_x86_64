@@ -85,6 +85,7 @@ INCLUDE Irvine32.inc
 main             PROC
     call    print_banner
     call    user_intructions
+    call    draw_board
     INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
@@ -137,10 +138,11 @@ drb_y:
     call    WriteString
     mov     al,' '
     call    WriteChar
-    mov     edx, DWORD PTR new_board.vtab
-    call    WriteString
-    loop    drb_y
+    mov     al,'|'     
+    call    WriteChar
     inc     esi
+    loop    drb_y   
+    
     ret
 draw_field      ENDP
 ;-------------------------------------------
@@ -162,16 +164,22 @@ update_board    ENDP
 print_banner    PROC
     mov    edx,OFFSET ban.row1
     call   WriteString
+    call   crlf
     mov    edx,OFFSET ban.row2
     call   WriteString
+    call   crlf
     mov    edx,OFFSET ban.row3
     call   WriteString
+    call   crlf
     mov    edx,OFFSET ban.row4
     call   WriteString
+    call   crlf
     mov    edx,OFFSET ban.row5
     call   WriteString
+    call   crlf
     mov    edx,OFFSET ban.row6
     call   WriteString
+    call   crlf
     call   crlf
     ret
 print_banner    ENDP
