@@ -38,7 +38,7 @@ INCLUDE Irvine32.inc
 ;-------------------------------------------
 ;board 
     Gameboard  STRUCT
-        board_x     BYTE    1,2,3,4,5,6,7,8,9
+        board_x     BYTE    "123456789",0
         board_y     BYTE    "ABCDEFGHI",0
         vtab        BYTE    "|",0
     Gameboard  ENDS
@@ -113,12 +113,12 @@ user_intructions ENDP
 ; draw the board out
 draw_board       PROC
     call    crlf
+    mov     al,' '
+    call    WriteChar
     mov     esi, OFFSET new_board.board_x
     mov     ecx, LENGTHOF new_board.board_x
     ;draws the row
 drb_x:
-    mov     al,' '
-    call    WriteChar
     mov     edx, [esi] 
     call    WriteString
     mov     al,' '
