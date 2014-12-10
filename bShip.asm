@@ -9,30 +9,38 @@ INCLUDE Irvine32.inc
 ;ships
 ;Carrier        5
     Carrier     STRUCT
-        x0      BYTE    0
-        x1      
+        dummy   BYTE    0
     Carrier     ENDS
 ;BattleShip     4
     BattleShip  STRUCT
-
+        dummy   BYTE    0
     BattleShip  ENDS
 ;Destroyer      3
     Destroyer   STRUCT
+        dummy   BYTE    0
     Destroyer   ENDS
 ;Submarine      3
     Submarine   STRUCT
+        dummy   BYTE    0
     Submarine   ENDS
 ;Patrol         2
     Patrol      STRUCT
+        dummy   BYTE    0
     Patrol      ENDS
+;-------------------------------------------
+;dictionary 
+    Dictionary  STRUCT
+        solutions_x BYTE    9 DUP (" ")
+        solutions_y BYTE    9 DUP (" ")
+        display_x   BYTE    9 DUP (" ")
+        display_y   BYTE    9 DUP (" ")
+    Dictionary  ENDS
 ;-------------------------------------------
 ;board 
     Gameboard  STRUCT
-        board_x     BYTE    1,2,3,4,5,6,7,8,9,10
+        board_x     BYTE    1,2,3,4,5,6,7,8,9
         board_y     BYTE    "ABCDEFGHI"0
-        vtab        BYTE    '|'
-        
-
+        vtab        BYTE    "|",0
     Gameboard  ENDS
 ;-------------------------------------------
 ;player move 
@@ -58,14 +66,21 @@ INCLUDE Irvine32.inc
         row2        BYTE    "    / __ )____ _/ /_/ /_/ /__ / ___// /_  (_)___     (_)___     /  |/  /   | / ___//  |/  /",0
         row3        BYTE    "   / __  / __ `/ __/ __/ / _ \\__ \/ __ \/ / __ \   / / __ \   / /|_/ / /| | \__ \/ /|_/ / ",0
         row4        BYTE    "  / /_/ / /_/ / /_/ /_/ /  __/__/ / / / / / /_/ /  / / / / /  / /  / / ___ |___/ / /  / /  ",0
-        row5        BYTE    " /_____/\__,_/\__/\__/_/\___/____/_/ /_/_/ .___/  /_/_/ /_/  /_/  /_/_/  |_/____/_/  /_/   ",0
+        row5        BYTE    " /_____/\___/\__/\__/_/\___/____/_/ /_/_/  ____/  /_/_/ /_/  /_/  /_/_/  |_/____/_/  /_/   ",0
         row6        BYTE    "                                        /_/                                                ",0
     Banner       ENDS
 ;-------------------------------------------
 .data
+    ;-------------------------------------------
+    ;structures
     ship_carrier    Carrier <>
     user_intruc     Instructions<>
     ban             Banner<>
+    dict            Dictionary<>
+    new_board       Gameboard<>
+    ;-------------------------------------------
+    ;primatives
+    cnt         DWORD    0
 .code
 main             PROC
     call    print_banner
@@ -80,7 +95,7 @@ user_intructions PROC
     mov     edx,OFFSET user_intructions.begin
     call    WriteString
     call    crlf
-    mov     edx,OFFSETuser_intructions.ships   
+    mov     edx,OFFSET user_intructions.ships   
     call    WriteString
     call    crlf
     mov     edx,OFFSET user_intructions.move_x
@@ -89,14 +104,44 @@ user_intructions PROC
     mov     edx,OFFSET user_intructions.move_y
     call    WriteString
     call    crlf
+    mov     eax, white + (black * 16)
+    call    SetTextColor
     ret
 user_intructions ENDP
 ;-------------------------------------------
 ; draw the board out
 draw_board       PROC
     call    crlf
-    ret 
+    mov     esi, OFFSET new_board.board_x
+    mov     ecx, LENGTHOF new_board.board_x
+    ;draws the row
+drb_x:
+    mov     al,' '
+    call    WriteChar
+    mov     edx, [esi] 
+    call    WriteString
+    mov     al,' '
+    call    WriteChar
+    inc     esi
+    loop    drb_x
+    mov     esi, OFFSET new_board.board_y  
+    call    draw_field
+    ret
 draw_board       ENDP
+;-------------------------------------------
+;draws field 
+draw_field      PROC
+    mov     ecx, LENGTHOF new_board.board_y
+drb_y:
+    mov     edx,new_board.board_y
+    call    WriteString
+    mov     al,' '
+    call    WriteChar
+    mov     edx, new_board.vtab
+    call    WriteString
+    loop    drb_y
+    ret
+draw_field      ENDP
 ;-------------------------------------------
 ; TODO randomize ships here
 randomize_s     PROC
@@ -105,7 +150,6 @@ randomize_s     ENDP
 ;-------------------------------------------
 ; TODO get user turn
 get_turn        PROC
-    call    GetXY
     ret
 get_turn        ENDP
 ;-------------------------------------------
@@ -128,6 +172,7 @@ print_banner    PROC
     mov    edx,OFFSET ban.row6
     call   WriteString
     call   crlf
+    ret
 print_banner    ENDP
 end     main
 
