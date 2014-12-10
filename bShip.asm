@@ -92,16 +92,16 @@ main             ENDP
 user_intructions PROC
     mov     eax, green + (black * 16)
     call    SetTextColor
-    mov     edx,OFFSET user_intructions.begin
+    mov     edx,OFFSET user_intruc.begin
     call    WriteString
     call    crlf
-    mov     edx,OFFSET user_intructions.ships   
+    mov     edx,OFFSET user_intruc.ships   
     call    WriteString
     call    crlf
-    mov     edx,OFFSET user_intructions.move_x
+    mov     edx,OFFSET user_intruc.move_x
     call    WriteString
     call    crlf
-    mov     edx,OFFSET user_intructions.move_y
+    mov     edx,OFFSET user_intruc.move_y
     call    WriteString
     call    crlf
     mov     eax, white + (black * 16)
@@ -133,13 +133,14 @@ draw_board       ENDP
 draw_field      PROC
     mov     ecx, LENGTHOF new_board.board_y
 drb_y:
-    mov     edx,new_board.board_y
+    mov     edx, [esi]
     call    WriteString
     mov     al,' '
     call    WriteChar
-    mov     edx, new_board.vtab
+    mov     edx, DWORD PTR new_board.vtab
     call    WriteString
     loop    drb_y
+    inc     esi
     ret
 draw_field      ENDP
 ;-------------------------------------------
