@@ -86,6 +86,7 @@ main             PROC
     call    print_banner
     call    user_intructions
     call    draw_board
+    call    draw_field
     INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
@@ -126,7 +127,6 @@ drb_x:
     inc     esi
     loop    drb_x
     call    crlf
-    call    draw_field
     ret
 draw_board       ENDP
 ;-------------------------------------------
