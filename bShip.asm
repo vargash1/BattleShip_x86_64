@@ -39,7 +39,7 @@ INCLUDE Irvine32.inc
 ;board 
     Gameboard  STRUCT
         board_x     BYTE    1,2,3,4,5,6,7,8,9
-        board_y     BYTE    "ABCDEFGHI"0
+        board_y     BYTE    "ABCDEFGHI",0
         vtab        BYTE    "|",0
     Gameboard  ENDS
 ;-------------------------------------------
@@ -125,13 +125,14 @@ drb_x:
     call    WriteChar
     inc     esi
     loop    drb_x
-    mov     esi, OFFSET new_board.board_y  
+    call    crlf
     call    draw_field
     ret
 draw_board       ENDP
 ;-------------------------------------------
 ;draws field 
 draw_field      PROC
+    mov     esi, OFFSET new_board.board_y  
     mov     ecx, LENGTHOF new_board.board_y
 drb_y:
     mov     edx, [esi]
