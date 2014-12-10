@@ -30,10 +30,10 @@ INCLUDE Irvine32.inc
 ;-------------------------------------------
 ;dictionary 
     Dictionary  STRUCT
-        solutions_x BYTE    9 DUP (" ")
-        solutions_y BYTE    9 DUP (" ")
-        display_x   BYTE    9 DUP (" ")
-        display_y   BYTE    9 DUP (" ")
+        solutions_x BYTE    " "," "," "," "," "," "," "," "," ",0
+        solutions_y BYTE    " "," "," "," "," "," "," "," "," ",0
+        display_x   BYTE    " "," "," "," "," "," "," "," "," ",0
+        display_y   BYTE    " "," "," "," "," "," "," "," "," ",0
     Dictionary  ENDS
 ;-------------------------------------------
 ;board 
