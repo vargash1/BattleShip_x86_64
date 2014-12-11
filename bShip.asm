@@ -137,10 +137,10 @@ drb_y:
     call    WriteChar
     push    ecx
     mov     ecx, [cnt]
-; nested loop
-drb_y_sub:
     mov     al, new_board.vtab
     call    WriteChar
+; nested loop
+drb_y_sub:
     mov     al, [edi]
     call    WriteChar
     mov     al, new_board.vtab
