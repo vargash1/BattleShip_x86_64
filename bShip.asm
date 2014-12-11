@@ -30,7 +30,7 @@ INCLUDE Irvine32.inc
 ;-------------------------------------------
 ;dictionary 
     Dictionary  STRUCT
-        solutions   BYTE    " "," "," "," "," "," "," "," "," ",0
+        solutions   BYTE    91 DUP (" ")
         solutions_y BYTE    " "," "," "," "," "," "," "," "," ",0
         display     BYTE    91 DUP (" ")
         display_y   BYTE    " "," "," "," "," "," "," "," "," ",0
@@ -39,6 +39,7 @@ INCLUDE Irvine32.inc
 ;board 
     Gameboard  STRUCT
         board_x     BYTE    "  1 2 3 4 5 6 7 8 9",0
+        board_x_2   BYTE    "  _________________",0
         board_y     BYTE    "A","B","C","D","E","F","G","H","I"
         vtab        BYTE    '|'
     Gameboard  ENDS
@@ -118,6 +119,8 @@ draw_board_x       PROC
     call    SetTextColor
     mov     edx,OFFSET new_board.board_x
     call    WriteString
+    mov     edx,OFFSET new_board.board_x_2 
+    call    WriteString
     call    default_text_color
     call    crlf
     ret
@@ -141,6 +144,8 @@ drb_y:
     call    WriteChar
 ; nested loop
 drb_y_sub:
+    mov     edx, new_board.board_x_2
+    call    WriteString
     mov     al, [edi]
     call    WriteChar
     mov     al, new_board.vtab
