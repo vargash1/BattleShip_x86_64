@@ -136,6 +136,9 @@ draw_board_y       PROC
     mov     [cnt],ecx
 ; main loop
 drb_y:
+    mov     edx, OFFSET new_board.board_x_2
+    call    WriteString
+    call    crlf
     mov     al, [esi]
     call    WriteChar
     push    ecx
@@ -144,9 +147,6 @@ drb_y:
     call    WriteChar
 ; nested loop
 drb_y_sub:
-    mov     edx, OFFSET new_board.board_x_2
-    call    WriteString
-    call    crlf
     mov     al, [edi]
     call    WriteChar
     mov     al, new_board.vtab
