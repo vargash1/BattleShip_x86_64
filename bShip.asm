@@ -127,7 +127,7 @@ draw_board_y       PROC
     call    SetTextColor
     mov     esi, OFFSET new_board.board_y  
     mov     ecx, LENGTHOF new_board.board_y
-    add     ecx, -(new_board.board_y / 2) 
+    add     ecx, -9 
 drb_y:
     mov     al, [esi]
     call    WriteChar
