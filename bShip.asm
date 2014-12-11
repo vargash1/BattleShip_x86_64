@@ -68,6 +68,7 @@ INCLUDE Irvine32.inc
         row4        BYTE    "  / /_/ / /_/ / /_/ /_/ /  __/__/ / / / / / /_/ /  / / / / /  / /  / / ___ |___/ / /  / /  ",0
         row5        BYTE    " /_____/\___/\__/\__/_/\___/____/_/ /_/_/  ____/  /_/_/ /_/  /_/  /_/_/  |_/____/_/  /_/   ",0
         row6        BYTE    "                                        /_/                                                ",0
+        row7        BYTE    "                                                                    By: Hector Vargas      ",0
     Banner       ENDS
 ;-------------------------------------------
 .data
@@ -174,7 +175,7 @@ print_banner    PROC
     mov     edx,OFFSET ban.row4
     call    WriteString
     call    crlf
-    mov     eax,lightGreen + (black * 16)
+    mov     eax,green + (black * 16)
     call    SetTextColor
     mov     edx,OFFSET ban.row5
     call    WriteString
@@ -182,6 +183,11 @@ print_banner    PROC
     mov     eax,cyan + (black * 16)
     call    SetTextColor
     mov     edx,OFFSET ban.row6
+    call    WriteString
+    call    crlf
+    mov     eax,lightgray + (black * 16)
+    call    SetTextColor
+    mov     edx,OFFSET ban.row7
     call    WriteString
     call    crlf
     call    default_text_color
