@@ -30,17 +30,17 @@ INCLUDE Irvine32.inc
 ;-------------------------------------------
 ;dictionary 
     Dictionary  STRUCT
-        solutions_x BYTE    " "," "," "," "," "," "," "," "," ",0
+        solutions   BYTE    " "," "," "," "," "," "," "," "," ",0
         solutions_y BYTE    " "," "," "," "," "," "," "," "," ",0
-        display_x   BYTE    " "," "," "," "," "," "," "," "," ",0
+        display     BYTE    91 DUP (" ")
         display_y   BYTE    " "," "," "," "," "," "," "," "," ",0
     Dictionary  ENDS
 ;-------------------------------------------
 ;board 
     Gameboard  STRUCT
-        board_x     BYTE    " 1 2 3 4 5 6 7 8 9",0
+        board_x     BYTE    "  1 2 3 4 5 6 7 8 9",0
         board_y     BYTE    "A","B","C","D","E","F","G","H","I"
-        vtab        BYTE    "|",0
+        vtab        BYTE    '|'
     Gameboard  ENDS
 ;-------------------------------------------
 ;player move 
@@ -128,10 +128,25 @@ draw_board_y       PROC
     mov     eax,lightCyan + (black * 16)
     call    SetTextColor
     mov     esi, OFFSET new_board.board_y  
+    mov     edi, OFFSET dict.display
     mov     ecx, LENGTHOF new_board.board_y
+    mov     [cnt],ecx
+; main loop
 drb_y:
     mov     al, [esi]
     call    WriteChar
+    push    ecx
+    mov     ecx, [cnt]
+; nested loop
+drb_y_sub:
+    mov     al, [edi]
+    call    WriteChar
+    mov     al, new_board.vtab
+    call    WriteChar
+    inc     edi
+    loop    drb_y_sub
+; end of nested loop 
+    pop     ecx
     call    crlf
     inc     esi
     loop    drb_y   
