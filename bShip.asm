@@ -38,7 +38,7 @@ INCLUDE Irvine32.inc
 ;-------------------------------------------
 ;board 
     Gameboard  STRUCT
-        board_x     BYTE    "  1|2|3|4|5|6|7|8|9",0
+        board_x     BYTE    "  1 2 3 4 5 6 7 8 9",0
         board_x_2   BYTE    "  __________________",0
         board_bot   BYTE    "  ------------------",0
         board_y     BYTE    "A","B","C","D","E","F","G","H","I"
@@ -95,7 +95,7 @@ main             ENDP
 ;-------------------------------------------
 ; greets and prints instructions to the user
 user_intructions PROC
-    mov     eax, green + (black * 16)
+    mov     eax, lightGreen + (black * 16)
     call    SetTextColor
     mov     edx,OFFSET user_intruc.begin
     call    WriteString
@@ -109,8 +109,7 @@ user_intructions PROC
     mov     edx,OFFSET user_intruc.move_y
     call    WriteString
     call    crlf
-    mov     eax, white + (black * 16)
-    call    SetTextColor
+    call    default_text_color
     ret
 user_intructions ENDP
 ;-------------------------------------------
@@ -210,7 +209,7 @@ print_banner    PROC
     mov     edx,OFFSET ban.row6
     call    WriteString
     call    crlf
-    mov     eax,gray + (black * 16)
+    mov     eax,black + (gray * 16)
     call    SetTextColor
     mov     edx,OFFSET ban.row7
     call    WriteString
