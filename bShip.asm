@@ -39,7 +39,7 @@ INCLUDE Irvine32.inc
 ;board 
     Gameboard  STRUCT
         board_x     BYTE    " 1 2 3 4 5 6 7 8 9",0
-        board_y     BYTE    "A","B","C","D","E","F","G","H","I"
+        board_y     BYTE    A,B,C,D,E,F,G,H,I
         vtab        BYTE    "|",0
     Gameboard  ENDS
 ;-------------------------------------------
@@ -178,7 +178,7 @@ print_banner    PROC
     mov     edx,OFFSET ban.row5
     call    WriteString
     call    crlf
-    mov     eax,lightMagenta + (black * 16)
+    mov     eax,cyan + (black * 16)
     call    SetTextColor
     mov     edx,OFFSET ban.row6
     call    WriteString
