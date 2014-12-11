@@ -146,6 +146,7 @@ drb_y:
 drb_y_sub:
     mov     edx, OFFSET new_board.board_x_2
     call    WriteString
+    call    crlf
     mov     al, [edi]
     call    WriteChar
     mov     al, new_board.vtab
