@@ -38,7 +38,7 @@ INCLUDE Irvine32.inc
 ;-------------------------------------------
 ;board 
     Gameboard  STRUCT
-        board_x     BYTE    1,2,3,4,5,6,7,8,9
+        board_x     BYTE    " 1 2 3 4 5 6 7 8 9",0
         board_y     BYTE    'A','B','C','D','E','F','G','H','I',0
         vtab        BYTE    "|",0
     Gameboard  ENDS
@@ -85,8 +85,8 @@ INCLUDE Irvine32.inc
 main             PROC
     call    print_banner
     call    user_intructions
-    call    draw_board
-    call    draw_field
+    call    draw_board_x
+    call    draw_board_y
     INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
@@ -112,40 +112,29 @@ user_intructions PROC
 user_intructions ENDP
 ;-------------------------------------------
 ; draw the board out
-draw_board       PROC
-    call    crlf
-    mov     al,' '
-    call    WriteChar
-    mov     esi, OFFSET new_board.board_x
-    mov     ecx, LENGTHOF new_board.board_x
-    ;draws the row
-drb_x:
-    mov     eax, [esi] 
-    call    WriteInt
-    mov     al,' '
-    call    WriteChar
-    inc     esi
-    loop    drb_x
-    call    crlf
-    ret
-draw_board       ENDP
+draw_board_x       PROC
+    mov     eax,lightCyan + (black * 16)
+    call    SetTextColor
+    mov     edx,OFFSET new_board.board_x
+    call    WriteString
+    call    default_text_color
+draw_board_x       ENDP
 ;-------------------------------------------
 ;draws field 
-draw_field      PROC
+draw_board_y       PROC
+    mov     eax,lightBlue + (black * 16)
+    call    SetTextColor
     mov     esi, OFFSET new_board.board_y  
     mov     ecx, LENGTHOF new_board.board_y
 drb_y:
-    mov     edx, [esi]
-    call    WriteString
-    mov     al,' '
+    mov     al, [esi]
     call    WriteChar
-    mov     al,'|'     
-    call    WriteChar
+    call    crlf
     inc     esi
     loop    drb_y   
-    
+    call    default_text_color
     ret
-draw_field      ENDP
+draw_board_y       ENDP
 ;-------------------------------------------
 ; TODO randomize ships here
 randomize_s     PROC
@@ -163,26 +152,43 @@ update_board    PROC
 update_board    ENDP
 ;-------------------------------------------
 print_banner    PROC
-    mov    edx,OFFSET ban.row1
-    call   WriteString
-    call   crlf
-    mov    edx,OFFSET ban.row2
-    call   WriteString
-    call   crlf
-    mov    edx,OFFSET ban.row3
-    call   WriteString
-    call   crlf
-    mov    edx,OFFSET ban.row4
-    call   WriteString
-    call   crlf
-    mov    edx,OFFSET ban.row5
-    call   WriteString
-    call   crlf
-    mov    edx,OFFSET ban.row6
-    call   WriteString
-    call   crlf
-    call   crlf
+    mov     eax,cyan + (black * 16)
+    call    SetTextColor
+    mov     edx,OFFSET ban.row1
+    call    WriteString
+    call    crlf
+    mov     eax,green + (black * 16)
+    call    SetTextColor
+    mov     edx,OFFSET ban.row2
+    call    WriteString
+    call    crlf
+    mov     eax,lightRed + (black * 16)
+    call    SetTextColor
+    mov     edx,OFFSET ban.row3
+    call    WriteString
+    call    crlf
+    mov     eax,yellow + (black * 16)
+    call    SetTextColor
+    mov     edx,OFFSET ban.row4
+    call    WriteString
+    call    crlf
+    mov     eax,lightGreen + (black * 16)
+    call    SetTextColor
+    mov     edx,OFFSET ban.row5
+    call    WriteString
+    call    crlf
+    mov     eax,lightMagenta + (black * 16)
+    call    SetTextColor
+    mov     edx,OFFSET ban.row6
+    call    WriteString
+    call    crlf
+    call    default_text_color
     ret
 print_banner    ENDP
+default_text_color  PROC
+    mov    eax,white + (black * 16)
+    call   SetTextColor
+    ret
+default_text_color  ENDP
 end     main
 
