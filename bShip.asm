@@ -38,7 +38,7 @@ INCLUDE Irvine32.inc
 ;-------------------------------------------
 ;board 
     Gameboard  STRUCT
-        board_x     BYTE    "  1 2 3 4 5 6 7 8 9",0
+        board_x     BYTE    "  1|2|3|4|5|6|7|8|9",0
         board_x_2   BYTE    "  __________________",0
         board_bot   BYTE    "  ------------------",0
         board_y     BYTE    "A","B","C","D","E","F","G","H","I"
@@ -157,9 +157,10 @@ drb_y_sub:
     call    crlf
     inc     esi
     loop    drb_y   
-    call    default_text_color
     mov     edx, OFFSET new_board.board_bot
     call    WriteString
+    call    crlf 
+    call    default_text_color
     ret
 draw_board_y       ENDP
 ;-------------------------------------------
