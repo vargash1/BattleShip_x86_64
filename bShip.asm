@@ -139,7 +139,7 @@ drb_y:
     mov     ecx, [cnt]
 ; nested loop
 drb_y_sub:
-    mov     al,' '
+    mov     al, new_board.vtab
     call    WriteChar
     mov     al, [edi]
     call    WriteChar
