@@ -119,6 +119,7 @@ draw_board_x       PROC
     call    WriteString
     call    default_text_color
     call    crlf
+    ret
 draw_board_x       ENDP
 ;-------------------------------------------
 ;draws field 
@@ -127,7 +128,6 @@ draw_board_y       PROC
     call    SetTextColor
     mov     esi, OFFSET new_board.board_y  
     mov     ecx, LENGTHOF new_board.board_y
-    add     ecx, -9 
 drb_y:
     mov     al, [esi]
     call    WriteChar
