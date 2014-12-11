@@ -170,7 +170,7 @@ print_banner    PROC
     mov     edx,OFFSET ban.row3
     call    WriteString
     call    crlf
-    mov     eax,yellow + (black * 16)
+    mov     eax,lightRed + (black * 16)
     call    SetTextColor
     mov     edx,OFFSET ban.row4
     call    WriteString
@@ -185,7 +185,7 @@ print_banner    PROC
     mov     edx,OFFSET ban.row6
     call    WriteString
     call    crlf
-    mov     eax,lightgray + (black * 16)
+    mov     eax,lightGray + (black * 16)
     call    SetTextColor
     mov     edx,OFFSET ban.row7
     call    WriteString
