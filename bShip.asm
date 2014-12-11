@@ -129,7 +129,7 @@ draw_board_x       ENDP
 ;-------------------------------------------
 ;draws field 
 draw_board_y       PROC
-    mov     eax,grey + (black * 16)
+    mov     eax,gray + (black * 16)
     call    SetTextColor
     mov     esi, OFFSET new_board.board_y  
     mov     edi, OFFSET dict.display
