@@ -39,7 +39,7 @@ INCLUDE Irvine32.inc
 ;board 
     Gameboard  STRUCT
         board_x     BYTE    "  1 2 3 4 5 6 7 8 9",0
-        board_x_2   BYTE    " ___________________",0
+        board_x_2   BYTE    "  __________________",0
         board_y     BYTE    "A","B","C","D","E","F","G","H","I"
         vtab        BYTE    '|'
     Gameboard  ENDS
@@ -115,7 +115,7 @@ user_intructions ENDP
 ;-------------------------------------------
 ; draw the board out
 draw_board_x       PROC
-    mov     eax,lightCyan + (black * 16)
+    mov     eax,gray + (black * 16)
     call    SetTextColor
     mov     edx,OFFSET new_board.board_x
     call    WriteString
