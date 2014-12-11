@@ -40,6 +40,7 @@ INCLUDE Irvine32.inc
     Gameboard  STRUCT
         board_x     BYTE    "  1 2 3 4 5 6 7 8 9",0
         board_x_2   BYTE    "  __________________",0
+        board_bot   BYTE    "  ------------------",0
         board_y     BYTE    "A","B","C","D","E","F","G","H","I"
         vtab        BYTE    '|'
     Gameboard  ENDS
@@ -154,12 +155,11 @@ drb_y_sub:
 ; end of nested loop 
     pop     ecx
     call    crlf
-    mov     edx, OFFSET new_board.board_x_2
-    call    WriteString
-    call    crlf
     inc     esi
     loop    drb_y   
     call    default_text_color
+    mov     edx, OFFSET new_board.board_bot
+    call    WriteString
     ret
 draw_board_y       ENDP
 ;-------------------------------------------
