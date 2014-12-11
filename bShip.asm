@@ -133,7 +133,6 @@ drb_y:
     mov     al, [esi]
     call    WriteChar
     call    crlf
-    call    crlf
     inc     esi
     loop    drb_y   
     call    default_text_color
@@ -161,7 +160,7 @@ print_banner    PROC
     mov     edx,OFFSET ban.row1
     call    WriteString
     call    crlf
-    mov     eax,green + (black * 16)
+    mov     eax,lightGreen + (black * 16)
     call    SetTextColor
     mov     edx,OFFSET ban.row2
     call    WriteString
@@ -176,7 +175,7 @@ print_banner    PROC
     mov     edx,OFFSET ban.row4
     call    WriteString
     call    crlf
-    mov     eax,green + (black * 16)
+    mov     eax,lightGreen + (black * 16)
     call    SetTextColor
     mov     edx,OFFSET ban.row5
     call    WriteString
