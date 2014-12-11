@@ -144,7 +144,7 @@ drb_y:
     call    WriteChar
 ; nested loop
 drb_y_sub:
-    mov     edx, new_board.board_x_2
+    mov     edx, OFFSET new_board.board_x_2
     call    WriteString
     mov     al, [edi]
     call    WriteChar
