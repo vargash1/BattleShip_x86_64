@@ -119,6 +119,7 @@ draw_board_x       PROC
     call    SetTextColor
     mov     edx,OFFSET new_board.board_x
     call    WriteString
+    call    crlf
     mov     edx,OFFSET new_board.board_x_2 
     call    WriteString
     call    default_text_color
@@ -136,9 +137,6 @@ draw_board_y       PROC
     mov     [cnt],ecx
 ; main loop
 drb_y:
-    mov     edx, OFFSET new_board.board_x_2
-    call    WriteString
-    call    crlf
     mov     al, [esi]
     call    WriteChar
     push    ecx
@@ -155,6 +153,9 @@ drb_y_sub:
     loop    drb_y_sub
 ; end of nested loop 
     pop     ecx
+    call    crlf
+    mov     edx, OFFSET new_board.board_x_2
+    call    WriteString
     call    crlf
     inc     esi
     loop    drb_y   
