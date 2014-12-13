@@ -253,6 +253,7 @@ random_direction    PROC
     mov     eax,2
     call    RandomRange
     mov     [orientation],eax
+    ret
 random_direction    ENDP
 ;-------------------------------------------
 end     main
