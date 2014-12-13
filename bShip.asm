@@ -100,7 +100,8 @@ INCLUDE Irvine32.inc
 main             PROC
     call    print_banner
     call    user_intructions
-    
+    call    draw_board_start
+    call    draw_board_active    
 INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
