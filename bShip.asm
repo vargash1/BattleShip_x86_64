@@ -100,15 +100,8 @@ INCLUDE Irvine32.inc
 main             PROC
     call    print_banner
     call    user_intructions
-    call    draw_board_x
-    call    draw_board_y
-    mov     ecx,100
-ltest:
-    call    random_direction
-    mov     eax,[orientation]
-    call    WriteInt
-    loop    ltest
-    INVOKE  ExitProcess,0
+    
+INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
 ; greets and prints instructions to the user
@@ -256,5 +249,21 @@ random_direction    PROC
     ret
 random_direction    ENDP
 ;-------------------------------------------
+;draws board in the beginning
+draw_board_start    PROC
+    call    draw_board_x
+    call    draw_board_y
+    call    crlf
+    ret 
+draw_board_start    ENDP
+;-------------------------------------------
+;draws board during game, clears screen
+draw_board_active   PROC
+    call    Clrscr
+    call    draw_board_x
+    call    draw_board_y
+    call    crlf
+    ret
+draw_board_active   ENDP
 end     main
 
