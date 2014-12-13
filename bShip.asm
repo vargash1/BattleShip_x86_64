@@ -102,6 +102,12 @@ main             PROC
     call    user_intructions
     call    draw_board_x
     call    draw_board_y
+    mov     ecx,100
+ltest:
+    call    random_direction
+    mov     eax,[orientation]
+    call    WriteInt
+    loop    ltest
     INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
