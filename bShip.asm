@@ -9,23 +9,28 @@ INCLUDE Irvine32.inc
 ;ships
 ;Carrier        5
     Carrier     STRUCT
-        dummy   BYTE    0
+        x_solutions     BYTE    5 DUP (0)
+        y_solutions     BYTE    5 DUP (0)
     Carrier     ENDS
 ;BattleShip     4
     BattleShip  STRUCT
-        dummy   BYTE    0
+        x_solutions     BYTE    5 DUP (0)
+        y_solutions     BYTE    5 DUP (0)
     BattleShip  ENDS
 ;Destroyer      3
     Destroyer   STRUCT
-        dummy   BYTE    0
+        x_solutions     BYTE    5 DUP (0)
+        y_solutions     BYTE    5 DUP (0)
     Destroyer   ENDS
 ;Submarine      3
     Submarine   STRUCT
-        dummy   BYTE    0
+        x_solutions     BYTE    5 DUP (0)
+        y_solutions     BYTE    5 DUP (0)
     Submarine   ENDS
 ;Patrol         2
     Patrol      STRUCT
-        dummy   BYTE    0
+        x_solutions     BYTE    5 DUP (0)
+        y_solutions     BYTE    5 DUP (0)
     Patrol      ENDS
 ;-------------------------------------------
 ;dictionary 
@@ -49,6 +54,7 @@ INCLUDE Irvine32.inc
     Event STRUCT
         miss        BYTE    'O'
         hit         BYTE    'X'
+        ships_hit   BYTE     0      ; if this == 17 game is over 
     Event ENDS      
 ;-------------------------------------------
 ;user instructions
@@ -70,7 +76,8 @@ INCLUDE Irvine32.inc
         row4        BYTE    "  / /_/ / /_/ / /_/ /_/ /  __/__/ / / / / / /_/ /  / / / / /  / /  / / ___ |___/ / /  / /  ",0
         row5        BYTE    " /_____/\___/\__/\__/_/\___/____/_/ /_/_/  ____/  /_/_/ /_/  /_/  /_/_/  |_/____/_/  /_/   ",0
         row6        BYTE    "                                        /_/                                                ",0
-        row7        BYTE    "                                                                    By: Hector Vargas      ",0
+        row7        BYTE    "                                                                    "
+        row8        BYTE    "By: Hector Vargas",0                     ; ^ ugly but makes it look nice!
     Banner       ENDS
 ;-------------------------------------------
 .data
@@ -81,9 +88,15 @@ INCLUDE Irvine32.inc
     ban             Banner<>
     dict            Dictionary<>
     new_board       Gameboard<>
+    carrier         Carrier<>
+    bship           BattleShip<>
+    destroy         Destroyer<>
+    submar          Submarine<>
+    patrol_boat     Patrol<>
     ;-------------------------------------------
     ;primatives
     cnt         DWORD    0
+    orientation DWORD    0
 .code
 main             PROC
     call    print_banner
@@ -165,6 +178,7 @@ draw_board_y       ENDP
 ;-------------------------------------------
 ; TODO randomize ships here
 randomize_s     PROC
+    
     ret
 randomize_s     ENDP
 ;-------------------------------------------
@@ -209,18 +223,32 @@ print_banner    PROC
     mov     edx,OFFSET ban.row6
     call    WriteString
     call    crlf
-    mov     eax,black + (gray * 16)
+    mov     eax,black + (black * 16)
     call    SetTextColor
     mov     edx,OFFSET ban.row7
+    call    WriteString
+    mov     eax,black + (grey * 16)
+    call    SetTextColor
+    mov     edx,OFFSET ban.row8
     call    WriteString
     call    crlf
     call    default_text_color
     ret
 print_banner    ENDP
+;-------------------------------------------
 default_text_color  PROC
     mov    eax,white + (black * 16)
     call   SetTextColor
     ret
 default_text_color  ENDP
+;-------------------------------------------
+;if 0 horizontal
+;if 1 vertical
+random_direction    PROC
+    mov     eax,2
+    call    RandomRange
+    mov     [orientation],eax
+random_direction    ENDP
+;-------------------------------------------
 end     main
 
