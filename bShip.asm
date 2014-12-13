@@ -259,7 +259,9 @@ draw_board_start    ENDP
 ;-------------------------------------------
 ;draws board during game, clears screen
 draw_board_active   PROC
+    call    WaitMsg
     call    Clrscr
+    call    WaitMsg
     call    draw_board_x
     call    draw_board_y
     call    crlf
