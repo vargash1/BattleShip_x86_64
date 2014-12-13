@@ -83,12 +83,11 @@ INCLUDE Irvine32.inc
 .data
     ;-------------------------------------------
     ;structures
-    ship_carrier    Carrier <>
     user_intruc     Instructions<>
     ban             Banner<>
     dict            Dictionary<>
     new_board       Gameboard<>
-    carrier         Carrier<>
+    ship_carrier    Carrier <>
     bship           BattleShip<>
     destroy         Destroyer<>
     submar          Submarine<>
@@ -227,7 +226,7 @@ print_banner    PROC
     call    SetTextColor
     mov     edx,OFFSET ban.row7
     call    WriteString
-    mov     eax,black + (grey * 16)
+    mov     eax,black + (gray * 16)
     call    SetTextColor
     mov     edx,OFFSET ban.row8
     call    WriteString
