@@ -214,7 +214,7 @@ get_turn_x       ENDP
 ;  get user turn y coordinate
 ;  will be called until the user enters 
 ;  a value from A-I
-get_turn_x       PROC
+get_turn_y       PROC
     mov     edx, OFFSET user_intruc.turn_y
     call    WriteString
     call    crlf
@@ -231,9 +231,9 @@ get_turn_x       PROC
     call    crlf        
     ret
 invalid_in:
-    call    get_turn_x
+    call    get_turn_y
     ret
-get_turn_x       ENDP
+get_turn_y       ENDP
 
 ;-------------------------------------------
 ; TODO update board
