@@ -196,14 +196,22 @@ randomize_carrier     PROC
     ret
 vertical_random:
     mov     eax,9
+    mov     ecx,100
+r1:
     call    RandomRange
+    mov     eax,9
+    loop    r1
     add     eax,1           ;to avoid 0
     call    WriteInt
     call    crlf
     ret
 horizontal_random:  
     mov     eax,9
+    mov     ecx,100
+r2:
     call    RandomRange
+    mov     eax,9
+    loop    r2
     add     eax,1           ;to avoid 0
     call    WriteInt
     call    crlf
