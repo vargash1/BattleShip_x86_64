@@ -103,17 +103,6 @@ INCLUDE Irvine32.inc
     orientation DWORD    0
 .code
 main             PROC
-    
-    mov     ecx,9
-ltest:
-    mov     eax,9
-    call    RandomRange
-    add     eax,1
-    call    WriteInt
-    call    crlf
-    mov     eax,9
-    loop    ltest
-    
     call    WaitMsg
     call    print_banner
     call    user_intructions
