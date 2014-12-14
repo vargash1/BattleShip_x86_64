@@ -192,13 +192,13 @@ randomize_carrier     PROC
     jne     horizontal_random
     ret
 vertical_random:
-    mov     eax,9
+    mov     eax,8
     call    RandomRange
     add     eax,1           ;to avoid 0
     call    WriteInt
     ret
 horizontal_random:  
-    mov     eax,9
+    mov     eax,8
     call    RandomRange
     add     eax,1           ;to avoid 0
     call    WriteInt
