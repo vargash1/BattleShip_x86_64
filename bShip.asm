@@ -187,12 +187,15 @@ randomize_s     PROC
     ret
 randomize_s     ENDP
 ;-------------------------------------------
-; TODO get user turn x coordinate
+;  get user turn x coordinate
+;  will be called until the user enters 
+;  a value from 1-9
 get_turn_x       PROC
     mov     edx, OFFSET user_intruc.turn_x
     call    WriteString
     call    crlf
     mov     edx, OFFSET user_intruc.prompt
+    call    WriteString
     call    ReadChar
     cmp     al,'1'
     jl      invalid_in
@@ -207,6 +210,31 @@ invalid_in:
     call    get_turn_x
     ret
 get_turn_x       ENDP
+;-------------------------------------------
+;  get user turn y coordinate
+;  will be called until the user enters 
+;  a value from A-I
+get_turn_x       PROC
+    mov     edx, OFFSET user_intruc.turn_y
+    call    WriteString
+    call    crlf
+    mov     edx, OFFSET user_intruc.prompt
+    call    WriteString
+    call    ReadChar
+    cmp     al,'A'
+    jl      invalid_in
+    cmp     al,'I'
+    jg      invalid_in
+    mov     [user_event.user_in_y], al
+    mov     al, [user_event.user_in_y]
+    call    WriteChar
+    call    crlf        
+    ret
+invalid_in:
+    call    get_turn_x
+    ret
+get_turn_x       ENDP
+
 ;-------------------------------------------
 ; TODO update board
 update_board    PROC
@@ -284,7 +312,7 @@ draw_board_start    ENDP
 draw_board_active   PROC
     call    WaitMsg
     call    Clrscr
-    call    WaitMsg
+    call    crlf
     call    draw_board_x
     call    draw_board_y
     call    crlf
