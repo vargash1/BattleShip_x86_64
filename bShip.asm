@@ -109,6 +109,7 @@ main             PROC
     call    draw_board_active    
     call    get_turn_x
     call    get_turn_y
+    call    randomize_carrier
 INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
