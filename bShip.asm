@@ -198,7 +198,7 @@ get_turn_x       PROC
     jl      invalid_in
     cmp     al,'9'
     jg      invalid_in
-    mov     user_event.user_in_x,[al]
+    mov     [user_event.user_in_x], al
     mov     al, [user_event.user_in_x]
     call    WriteChar
     call    crlf        
