@@ -183,10 +183,26 @@ drb_y_sub:
 draw_board_y       ENDP
 ;-------------------------------------------
 ; TODO randomize ships here
-randomize_s     PROC
-    
+randomize_carrier     PROC
+    call    random_direction
+    mov     eax,[orientation]
+    cmp     eax,0
+    je      vertical_random
+    jne     horizontal_random
     ret
-randomize_s     ENDP
+vertical_random:
+    mov     eax,9
+    call    RandomRange
+    add     eax,1           ;to avoid 0
+    call    WriteInt
+    ret
+horizontal_random:  
+    mov     eax,9
+    call    RandomRange
+    add     eax,1           ;to avoid 0
+    call    WriteInt
+    ret
+randomize_carrier     ENDP
 ;-------------------------------------------
 ;  get user turn x coordinate
 ;  will be called until the user enters 
