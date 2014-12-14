@@ -110,6 +110,9 @@ main             PROC
     call    get_turn_x
     call    get_turn_y
     call    randomize_carrier
+    call    randomize_carrier
+    call    randomize_carrier
+    call    randomize_carrier
 INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
@@ -192,16 +195,18 @@ randomize_carrier     PROC
     jne     horizontal_random
     ret
 vertical_random:
-    mov     eax,8
+    mov     eax,9
     call    RandomRange
     add     eax,1           ;to avoid 0
     call    WriteInt
+    call    crlf
     ret
 horizontal_random:  
-    mov     eax,8
+    mov     eax,9
     call    RandomRange
     add     eax,1           ;to avoid 0
     call    WriteInt
+    call    crlf
     ret
 randomize_carrier     ENDP
 ;-------------------------------------------
