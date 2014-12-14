@@ -55,6 +55,8 @@ INCLUDE Irvine32.inc
         miss        BYTE    'O'
         hit         BYTE    'X'
         ships_hit   BYTE     0      ; if this == 17 game is over 
+        user_in_x   BYTE     0
+        user_in_x   BYTE     0
     Event ENDS      
 ;-------------------------------------------
 ;user instructions
@@ -65,6 +67,8 @@ INCLUDE Irvine32.inc
         ships       BYTE    "Ships have been randomized on the field! Good Luck!",0
         move_x      BYTE    "You will enter a number on the X axis",0
         move_y      BYTE    "Followed by a letter on the Y axis!",0    
+        turn_x      BYTE    "Enter a X coordinate ",0
+        turn_y      BYTE    "Enter a Y coordinate ",0
         prompt      BYTE    "> ",0
     Instructions ENDS 
 ;-------------------------------------------
@@ -83,6 +87,7 @@ INCLUDE Irvine32.inc
 .data
     ;-------------------------------------------
     ;structures
+    event           Event<>
     user_intruc     Instructions<>
     ban             Banner<>
     dict            Dictionary<>
@@ -102,6 +107,7 @@ main             PROC
     call    user_intructions
     call    draw_board_start
     call    draw_board_active    
+    call    get_turn_x
 INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
@@ -181,10 +187,23 @@ randomize_s     PROC
     ret
 randomize_s     ENDP
 ;-------------------------------------------
-; TODO get user turn
-get_turn        PROC
+; TODO get user turn x coordinate
+get_turn_x       PROC
+    mov     edx, OFFSET user_intruc.turn_x
+    call    WriteString
+    call    crlf
+    mov     edx, OFFSET user_intruc.prompt
+    call    ReadChar
+    cmp     al,'1'
+    jl      invalid_in
+    cmp     al,'9'
+    jg      invalid_in
+    mov     [event.user_in_x], al        
     ret
-get_turn        ENDP
+invalid_in:
+    call    get_turn_x
+    ret
+get_turn_x       ENDP
 ;-------------------------------------------
 ; TODO update board
 update_board    PROC
