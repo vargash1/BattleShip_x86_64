@@ -56,7 +56,7 @@ INCLUDE Irvine32.inc
         hit         BYTE    'X'
         ships_hit   BYTE     0      ; if this == 17 game is over 
         user_in_x   BYTE     0
-        user_in_x   BYTE     0
+        user_in_y   BYTE     0
     Event ENDS      
 ;-------------------------------------------
 ;user instructions
@@ -198,7 +198,10 @@ get_turn_x       PROC
     jl      invalid_in
     cmp     al,'9'
     jg      invalid_in
-    mov     [event.user_in_x], al        
+    mov     event.user_in_x,[al]
+    mov     al, [event.user_in_x]
+    call    WriteChar
+    call    crlf        
     ret
 invalid_in:
     call    get_turn_x
