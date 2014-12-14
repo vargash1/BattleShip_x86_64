@@ -104,13 +104,14 @@ INCLUDE Irvine32.inc
 .code
 main             PROC
     
-    mov     ecx,100
+    mov     ecx,9
 ltest:
-    mov     eax,4000
+    mov     eax,9
     call    RandomRange
+    add     eax,1
     call    WriteInt
     call    crlf
-    mov     eax,4000
+    mov     eax,9
     loop    ltest
     
     call    WaitMsg
