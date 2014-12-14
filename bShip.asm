@@ -103,7 +103,6 @@ INCLUDE Irvine32.inc
     orientation DWORD    0
 .code
 main             PROC
-    call    WaitMsg
     call    print_banner
     call    user_intructions
     call    draw_board_start
