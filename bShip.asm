@@ -108,6 +108,7 @@ main             PROC
     call    draw_board_start
     call    draw_board_active    
     call    get_turn_x
+    call    get_turn_y
 INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
