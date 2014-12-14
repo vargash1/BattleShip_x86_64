@@ -87,7 +87,7 @@ INCLUDE Irvine32.inc
 .data
     ;-------------------------------------------
     ;structures
-    event           Event<>
+    user_event      Event<>
     user_intruc     Instructions<>
     ban             Banner<>
     dict            Dictionary<>
@@ -198,8 +198,8 @@ get_turn_x       PROC
     jl      invalid_in
     cmp     al,'9'
     jg      invalid_in
-    mov     event.user_in_x,[al]
-    mov     al, [event.user_in_x]
+    mov     user_event.user_in_x,[al]
+    mov     al, [user_event.user_in_x]
     call    WriteChar
     call    crlf        
     ret
