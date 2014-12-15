@@ -7,31 +7,18 @@
 INCLUDE Irvine32.inc
 ;-------------------------------------------
 ;ships
+    Ship        STRUCT
+        x_solutions     BYTE    5 DUP (0)
+        y_solutions     BYTE    5 DUP (0)
+        ship_size       DWORD   ?
+        x_tmp           DWORD   ?
+        y_tmp           DWORD   ?
+    Ship        ENDS
 ;Carrier        5
-    Carrier     STRUCT
-        x_solutions     BYTE    5 DUP (0)
-        y_solutions     BYTE    5 DUP (0)
-    Carrier     ENDS
 ;BattleShip     4
-    BattleShip  STRUCT
-        x_solutions     BYTE    5 DUP (0)
-        y_solutions     BYTE    5 DUP (0)
-    BattleShip  ENDS
 ;Destroyer      3
-    Destroyer   STRUCT
-        x_solutions     BYTE    5 DUP (0)
-        y_solutions     BYTE    5 DUP (0)
-    Destroyer   ENDS
 ;Submarine      3
-    Submarine   STRUCT
-        x_solutions     BYTE    5 DUP (0)
-        y_solutions     BYTE    5 DUP (0)
-    Submarine   ENDS
 ;Patrol         2
-    Patrol      STRUCT
-        x_solutions     BYTE    5 DUP (0)
-        y_solutions     BYTE    5 DUP (0)
-    Patrol      ENDS
 ;-------------------------------------------
 ;dictionary 
     Dictionary  STRUCT
@@ -92,17 +79,18 @@ INCLUDE Irvine32.inc
     ban             Banner<>
     dict            Dictionary<>
     new_board       Gameboard<>
-    ship_carrier    Carrier <>
-    bship           BattleShip<>
-    destroy         Destroyer<>
-    submar          Submarine<>
-    patrol_boat     Patrol<>
+    air_carrier     Ship<>
+    batl_ship       Ship<>
+    destroyer       Ship<>
+    submarine       Ship<>
+    patrol          Ship<>
     ;-------------------------------------------
     ;primatives
     cnt         DWORD    0
     orientation DWORD    0
 .code
 main             PROC
+    call    set_ship_data
     call    print_banner
     call    user_intructions
     call    draw_board_start
@@ -110,9 +98,7 @@ main             PROC
     call    get_turn_x
     call    get_turn_y
     call    randomize_carrier
-    call    randomize_carrier
-    call    randomize_carrier
-    call    randomize_carrier
+    call    draw_board_active
 INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
@@ -181,7 +167,7 @@ drb_y_sub:
     loop    drb_y   
     mov     edx, OFFSET new_board.board_bot
     call    WriteString
-    call    crlf 
+    call    crlf
     call    default_text_color
     ret
 draw_board_y       ENDP
@@ -189,21 +175,46 @@ draw_board_y       ENDP
 ; TODO randomize ships here
 randomize_carrier     PROC
     call    random_direction
-    mov     eax,[orientation]
+    mov     eax,0                ;[orientation]
     cmp     eax,0
     je      vertical_random
     jne     horizontal_random
     ret
 vertical_random:
+;-------------------------------------------
+;random x's
     mov     eax,9
-    mov     ecx,100
+    mov     ecx,1337
 r1:
     mov     eax,9
     call    RandomRange
     loop    r1
-    add     eax,1           ;to avoid 0
-    call    WriteInt
-    call    crlf
+;fill up ship x solutions
+    mov     edi, OFFSET air_carrier.x_solutions
+    mov     ecx, LENTHOF air_carrier.x_solutions
+fill_x:
+    mov     edi,[eax]    
+    loop    fill_x
+;-------------------------------------------
+;random y's
+    mov     [air_carrier.x_tmp],eax
+    mov     eax,5
+    mov     ecx,1337
+r2:
+    mov     eax,5
+    call    RandomRange
+    loop    r2
+    mov     esi, OFFSET dict.solutions
+    mov     edx,0
+    mov     ebx,9
+    imul    ebx
+    add     esi,eax
+    add     esi,[air_carrier.x_tmp]
+    mov     ecx,5
+fill_y:
+    mov     esi, 'X'
+    add     esi, 9
+    loop    fill_y
     ret
 horizontal_random:  
     mov     eax,9
@@ -229,15 +240,15 @@ get_turn_x       PROC
     call    WriteString
     call    ReadChar
     cmp     al,'1'
-    jl      invalid_in
+    jl      invalid_in_x
     cmp     al,'9'
-    jg      invalid_in
+    jg      invalid_in_x
     mov     [user_event.user_in_x], al
     mov     al, [user_event.user_in_x]
     call    WriteChar
     call    crlf        
     ret
-invalid_in:
+invalid_in_x:
     call    get_turn_x
     ret
 get_turn_x       ENDP
@@ -253,15 +264,15 @@ get_turn_y       PROC
     call    WriteString
     call    ReadChar
     cmp     al,'A'
-    jl      invalid_in
+    jl      invalid_in_y
     cmp     al,'I'
-    jg      invalid_in
+    jg      invalid_in_y
     mov     [user_event.user_in_y], al
     mov     al, [user_event.user_in_y]
     call    WriteChar
     call    crlf        
     ret
-invalid_in:
+invalid_in_y:
     call    get_turn_y
     ret
 get_turn_y       ENDP
@@ -345,9 +356,54 @@ draw_board_active   PROC
     call    Clrscr
     call    crlf
     call    draw_board_x
-    call    draw_board_y
+    call    draw_board_y_sol
     call    crlf
     ret
 draw_board_active   ENDP
+set_ship_data   PROC
+    mov     air_carrier.ship_size, 5
+    mov     batl_ship.ship_size, 4
+    mov     destroyer.ship_size, 3
+    mov     submarine.ship_size, 3
+    mov     patrol.ship_size, 2
+    ret
+set_ship_data   ENDP
+;-------------------------------------------
+;draws field 
+draw_board_y_sol       PROC
+    mov     eax,gray + (black * 16)
+    call    SetTextColor
+    mov     esi, OFFSET new_board.board_y  
+    mov     edi, OFFSET dict.solutions
+    mov     ecx, LENGTHOF new_board.board_y
+    mov     [cnt],ecx
+; main loop
+drb_y:
+    mov     al, [esi]
+    call    WriteChar
+    push    ecx
+    mov     ecx, [cnt]
+    mov     al, new_board.vtab
+    call    WriteChar
+; nested loop
+drb_y_sub:
+    mov     al, [edi]
+    call    WriteChar
+    mov     al, new_board.vtab
+    call    WriteChar
+    inc     edi
+    loop    drb_y_sub
+; end of nested loop 
+    pop     ecx
+    call    crlf
+    inc     esi
+    loop    drb_y   
+    mov     edx, OFFSET new_board.board_bot
+    call    WriteString
+    call    crlf
+    call    default_text_color
+    ret
+draw_board_y_sol       ENDP
+
 end     main
 
