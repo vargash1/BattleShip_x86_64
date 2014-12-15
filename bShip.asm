@@ -195,6 +195,7 @@ r1:
     mov     ecx, LENGTHOF air_carrier.x_solutions
 fill_x:
     mov     edi,[eax]    
+    inc     edi
     loop    fill_x
 ;-------------------------------------------
 ;random y's
