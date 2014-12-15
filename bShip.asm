@@ -373,7 +373,7 @@ set_ship_data   ENDP
 draw_board_y_sol       PROC
     mov     eax,gray + (black * 16)
     call    SetTextColor
-    mov     esi, OFFSZET new_board.board_y  
+    mov     esi, OFFSET new_board.board_y  
     mov     edi, OFFSET dict.solutions
     mov     ecx, LENGTHOF new_board.board_y
     mov     [cnt],ecx
