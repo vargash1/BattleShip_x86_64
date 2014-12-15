@@ -239,11 +239,11 @@ r4:
     add     esi, eax
     add     esi, air_carrier.x_tmp
     mov     ecx,5
-fill_y:
+fill_x:
     mov     al,'X'
     mov     [esi],al
     inc     esi
-    loop    fill_y
+    loop    fill_x
     ret
 randomize_carrier     ENDP
 ;-------------------------------------------
