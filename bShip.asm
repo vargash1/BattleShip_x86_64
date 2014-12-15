@@ -186,11 +186,13 @@ vertical_random:
 ;random x's
     mov     eax,9
     mov     ecx,100
+    call    DumpRegs
 r1:
     mov     eax,9
     call    RandomRange
     loop    r1
 ;fill up ship x solutions
+    call    DumpRegs
     mov     edi, OFFSET air_carrier.x_solutions
     mov     ecx, LENGTHOF air_carrier.x_solutions
 fill_x:
@@ -199,6 +201,7 @@ fill_x:
     loop    fill_x
 ;-------------------------------------------
 ;random y's
+    call    DumpRegs
     mov     [air_carrier.x_tmp],eax
     mov     eax,5
     mov     ecx,100
@@ -206,6 +209,7 @@ r2:
     mov     eax,5
     call    RandomRange
     loop    r2
+    call    DumpRegs
     mov     esi, OFFSET dict.solutions
     mov     edx,0
     mov     ebx,9
