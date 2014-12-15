@@ -191,7 +191,7 @@ r1:
     loop    r1
 ;fill up ship x solutions
     mov     edi, OFFSET air_carrier.x_solutions
-    mov     ecx, LENTHOF air_carrier.x_solutions
+    mov     ecx, LENGTHOF air_carrier.x_solutions
 fill_x:
     mov     edi,[eax]    
     loop    fill_x
@@ -219,7 +219,7 @@ fill_y:
 horizontal_random:  
     mov     eax,9
     mov     ecx,100
-r2:
+r3:
     mov     eax,9
     call    RandomRange
     loop    r2
