@@ -227,7 +227,7 @@ r3:
 ;random y's
     mov     [air_carrier.x_tmp], eax
     mov     eax,9
-    mov     ecx,1337
+    mov     ecx,666
 r4:
     mov     eax,9
     call    RandomRange
