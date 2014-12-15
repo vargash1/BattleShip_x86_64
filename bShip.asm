@@ -239,7 +239,7 @@ r4:
     add     esi, eax
     add     esi, air_carrier.x_tmp
     mov     ecx,5
-fill_x:
+fill_y:
     mov     al,'X'
     mov     [esi],al
     inc     esi
