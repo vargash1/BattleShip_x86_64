@@ -10,9 +10,9 @@ INCLUDE Irvine32.inc
     Ship        STRUCT
         x_solutions     BYTE    5 DUP (0)
         y_solutions     BYTE    5 DUP (0)
-        ship_size       DWORD   ?
-        x_tmp           DWORD   ?
-        y_tmp           DWORD   ?
+        ship_size       DWORD   0
+        x_tmp           DWORD   0
+        y_tmp           DWORD   0
     Ship        ENDS
 ;Carrier        5
 ;BattleShip     4
@@ -22,9 +22,9 @@ INCLUDE Irvine32.inc
 ;-------------------------------------------
 ;dictionary 
     Dictionary  STRUCT
-        solutions   BYTE    91 DUP (" ")
+        solutions   BYTE    81 DUP (" ")
         solutions_y BYTE    " "," "," "," "," "," "," "," "," ",0
-        display     BYTE    91 DUP (" ")
+        display     BYTE    81 DUP (" ")
         display_y   BYTE    " "," "," "," "," "," "," "," "," ",0
     Dictionary  ENDS
 ;-------------------------------------------
@@ -98,6 +98,7 @@ main             PROC
     call    get_turn_x
     call    get_turn_y
     call    randomize_carrier
+    CALL    DumpRegs
     call    draw_board_active
     INVOKE  ExitProcess,0
 main             ENDP
