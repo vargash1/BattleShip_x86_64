@@ -99,7 +99,7 @@ main             PROC
     call    get_turn_y
     call    randomize_carrier
     call    draw_board_active
-INVOKE  ExitProcess,0
+    INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
 ; greets and prints instructions to the user
@@ -212,7 +212,8 @@ r2:
     add     esi, air_carrier.x_tmp
     mov     ecx,5
 fill_y:
-    mov     esi,'X'
+    mov     al,'X'
+    mov     [esi],al
     add     esi, 9
     loop    fill_y
     ret
