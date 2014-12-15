@@ -218,7 +218,7 @@ horizontal_random:
 ;-------------------------------------------
 ;random x's
     mov     eax,5
-    mov     ecx,1337
+    mov     ecx,2121
 r3:
     mov     eax,5
     call    RandomRange
