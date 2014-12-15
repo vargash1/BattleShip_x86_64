@@ -212,7 +212,7 @@ r2:
     add     esi,[air_carrier.x_tmp]
     mov     ecx,5
 fill_y:
-    mov     esi, 'X'
+    mov     [esi], 'X'
     add     esi, 9
     loop    fill_y
     ret
