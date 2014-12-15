@@ -191,14 +191,13 @@ r1:
     mov     eax,9
     call    RandomRange
     loop    r1
-;fill up ship x solutions
-    call    DumpRegs
-    mov     edi, OFFSET air_carrier.x_solutions
-    mov     ecx, LENGTHOF air_carrier.x_solutions
-fill_x:
-    mov     edi,[eax]    
-    inc     edi
-    loop    fill_x
+; ;fill up ship x solutions
+;     mov     edi, OFFSET air_carrier.x_solutions
+;     mov     ecx, LENGTHOF air_carrier.x_solutions
+; fill_x:
+;     mov     edi,[eax]    
+;     inc     edi
+;     loop    fill_x
 ;-------------------------------------------
 ;random y's
     call    DumpRegs
