@@ -3,8 +3,10 @@
 ; @Email:  vargash1@wit.edu
 ; @Date:   2014-12-07 13:04:53
 ; @Last Modified by:   vargash1
-; @Last Modified time: 2014-12-09 10:13:30
+; @Last Modified time: 2014-12-15 15:55:33
 INCLUDE Irvine32.inc
+;TODO use logic operator AND to convert
+;lowercase to uppercase!!!
 ;-------------------------------------------
 ;ships
     Ship        STRUCT
@@ -176,7 +178,7 @@ draw_board_y       ENDP
 ; TODO randomize ships here
 randomize_carrier     PROC
     call    random_direction
-    mov     eax,0                ;[orientation]
+    mov     eax,1
     cmp     eax,0
     je      vertical_random
     jne     horizontal_random
@@ -185,30 +187,20 @@ vertical_random:
 ;-------------------------------------------
 ;random x's
     mov     eax,9
-    mov     ecx,100
-    call    DumpRegs
+    mov     ecx,1337
 r1:
     mov     eax,9
     call    RandomRange
     loop    r1
-; ;fill up ship x solutions
-;     mov     edi, OFFSET air_carrier.x_solutions
-;     mov     ecx, LENGTHOF air_carrier.x_solutions
-; fill_x:
-;     mov     edi,[eax]    
-;     inc     edi
-;     loop    fill_x
 ;-------------------------------------------
 ;random y's
-    call    DumpRegs
     mov     [air_carrier.x_tmp],eax
     mov     eax,5
-    mov     ecx,100
+    mov     ecx,1337
 r2:
     mov     eax,5
     call    RandomRange
     loop    r2
-    call    DumpRegs
     mov     esi, OFFSET dict.solutions
     mov     edx,0
     mov     ebx,9
@@ -222,16 +214,36 @@ fill_y:
     add     esi, 9
     loop    fill_y
     ret
-horizontal_random:  
-    mov     eax,9
-    mov     ecx,100
+horizontal_random:
+;-------------------------------------------
+;random x's
+    mov     eax,5
+    mov     ecx,1337
 r3:
+    mov     eax,5
+    call    RandomRange
+    loop    r3
+;-------------------------------------------
+;random y's
+    mov     [air_carrier.x_tmp], eax
+    mov     eax,9
+    mov     ecx,1337
+r4:
     mov     eax,9
     call    RandomRange
-    loop    r2
-    add     eax,1           ;to avoid 0
-    call    WriteInt
-    call    crlf
+    loop    r4
+    mov     esi, OFFSET dict.solutions
+    mov     edx,0
+    mov     ebx,9
+    imul    ebx
+    add     esi, eax
+    add     esi, air_carrier.x_tmp
+    mov     ecx,5
+fill_x:
+    mov     al,'X'
+    mov     [esi],al
+    inc     esi
+    loop    fill_y
     ret
 randomize_carrier     ENDP
 ;-------------------------------------------
@@ -355,7 +367,7 @@ draw_board_start    PROC
     call    crlf
     ret 
 draw_board_start    ENDP
-;-------------------------------------------
+;------------------------------------------
 ;draws board during game, clears screen
 draw_board_active   PROC
     call    WaitMsg
@@ -366,6 +378,8 @@ draw_board_active   PROC
     call    crlf
     ret
 draw_board_active   ENDP
+;-------------------------------------------
+;sets ship sizes
 set_ship_data   PROC
     mov     air_carrier.ship_size, 5
     mov     batl_ship.ship_size, 4
