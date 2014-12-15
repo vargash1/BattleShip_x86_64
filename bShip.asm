@@ -184,7 +184,7 @@ vertical_random:
 ;-------------------------------------------
 ;random x's
     mov     eax,9
-    mov     ecx,1337
+    mov     ecx,100
 r1:
     mov     eax,9
     call    RandomRange
@@ -199,7 +199,7 @@ fill_x:
 ;random y's
     mov     [air_carrier.x_tmp],eax
     mov     eax,5
-    mov     ecx,1337
+    mov     ecx,100
 r2:
     mov     eax,5
     call    RandomRange
@@ -209,10 +209,10 @@ r2:
     mov     ebx,9
     imul    ebx
     add     esi,eax
-    add     esi,[air_carrier.x_tmp]
+    add     esi, air_carrier.x_tmp
     mov     ecx,5
 fill_y:
-    mov     [esi], 'X'
+    mov     esi,'X'
     add     esi, 9
     loop    fill_y
     ret
@@ -373,7 +373,7 @@ set_ship_data   ENDP
 draw_board_y_sol       PROC
     mov     eax,gray + (black * 16)
     call    SetTextColor
-    mov     esi, OFFSET new_board.board_y  
+    mov     esi, OFFSZET new_board.board_y  
     mov     edi, OFFSET dict.solutions
     mov     ecx, LENGTHOF new_board.board_y
     mov     [cnt],ecx
@@ -404,6 +404,5 @@ drb_y_sub:
     call    default_text_color
     ret
 draw_board_y_sol       ENDP
-
 end     main
 
