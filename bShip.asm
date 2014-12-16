@@ -3,10 +3,8 @@
 ; @Email:  vargash1@wit.edu
 ; @Date:   2014-12-07 13:04:53
 ; @Last Modified by:   vargash1
-; @Last Modified time: 2014-12-16 17:44:46
+; @Last Modified time: 2014-12-16 17:48:12
 INCLUDE Irvine32.inc
-;TODO use logic operator AND to convert
-;lowercase to uppercase!!!
 ;-------------------------------------------
 ;ships
     Ship        STRUCT
@@ -889,5 +887,8 @@ invalid_option:
     call    ask_user_diff
     ret
 ask_user_diff   ENDP
+;TODO UPDATE the board with ecx, user_diff!! and we are donnerino
+;TODO use logic operator AND to convert ***************
+;lowercase to uppercase!!!
 end     main
 
