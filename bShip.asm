@@ -3,7 +3,7 @@
 ; @Email:  vargash1@wit.edu
 ; @Date:   2014-12-07 13:04:53
 ; @Last Modified by:   vargash1
-; @Last Modified time: 2014-12-15 15:55:33
+; @Last Modified time: 2014-12-16 17:44:46
 INCLUDE Irvine32.inc
 ;TODO use logic operator AND to convert
 ;lowercase to uppercase!!!
@@ -46,6 +46,9 @@ INCLUDE Irvine32.inc
         ships_hit   BYTE     0      ; if this == 17 game is over 
         user_in_x   BYTE     0
         user_in_y   BYTE     0
+        hard        DWORD    35
+        medium      DWORD    55
+        easy        DWORD    75
     Event ENDS      
 ;-------------------------------------------
 ;user instructions
@@ -90,8 +93,19 @@ INCLUDE Irvine32.inc
     ;primatives
     cnt         DWORD    0
     orientation DWORD    0
+    flag        BYTE     0          ;used to check spots
+    msg_box_caption     BYTE     "Welcome to BattleShip in x86_64 MASM assmembly",0
+    msg_box_question    BYTE     "Would you like to play my game?",0
+    msg_box_confirmed   BYTE     236,"Alright! Hope you have fun!",236,0
+    diff        BYTE    "Choose the difficulty of the game, this will limit the turns you can take!",0Dh,0Ah   
+                BYTE    "(H)ard, (I)ntermediate, or (E)asy? Enter the character to select!",0Dh,0Ah,0
+    user_diff   DWORD   ?
 .code
 main             PROC
+    call    ask_user_play
+    ;if user clicks no then game exits
+    call    ask_user_diff
+    call    Clrscr
     call    set_ship_data
     call    print_banner
     call    user_intructions
@@ -99,8 +113,7 @@ main             PROC
     call    draw_board_active    
     call    get_turn_x
     call    get_turn_y
-    call    randomize_carrier
-    CALL    DumpRegs
+    call    random_ships_all
     call    draw_board_active
     INVOKE  ExitProcess,0
 main             ENDP
@@ -175,10 +188,10 @@ drb_y_sub:
     ret
 draw_board_y       ENDP
 ;-------------------------------------------
-; TODO randomize ships here
+; randomize carrier here WORKS
 randomize_carrier     PROC
     call    random_direction
-    mov     eax,1
+    mov     eax,[orientation]
     cmp     eax,0
     je      vertical_random
     jne     horizontal_random
@@ -247,6 +260,363 @@ fill_x:
     ret
 randomize_carrier     ENDP
 ;-------------------------------------------
+;randomizes battleship 4 WORKS
+;must check for anything in the way 
+randomize_bship     PROC
+    call    random_direction
+    mov     eax,[orientation]
+    cmp     eax,0
+    je      vertical_random
+    jne     horizontal_random
+    ret
+vertical_random:
+;-------------------------------------------
+;random x's
+    mov     eax,9
+    mov     ecx,1337
+r1:
+    mov     eax,9
+    call    RandomRange
+    loop    r1
+;-------------------------------------------
+;random y's
+    mov     [batl_ship.x_tmp],eax
+    mov     eax,4
+    mov     ecx,1337
+r2:
+    mov     eax,4
+    call    RandomRange
+    loop    r2
+    mov     esi, OFFSET dict.solutions
+    mov     edx,0
+    mov     ebx,9
+    imul    ebx
+    add     esi,eax
+    add     esi, batl_ship.x_tmp
+    mov     ecx,4
+fill_y:
+    mov     [flag],0
+    call    check_if_taken
+    mov     eax,DWORD PTR [flag]
+    cmp     eax,1
+    je      recurse
+    call    crlf
+    mov     al,'X'
+    mov     [esi],al
+    add     esi, 9
+    loop    fill_y
+    ret
+recurse:    ;if esi is occupied already
+    call    randomize_bship
+    ret
+    
+  
+horizontal_random:
+;-------------------------------------------
+;random x's
+    mov     eax,4
+    mov     ecx,2121
+r3:
+    mov     eax,4
+    call    RandomRange
+    loop    r3
+;-------------------------------------------
+;random y's
+    mov     [batl_ship.x_tmp], eax
+    mov     eax,9
+    mov     ecx,12
+r4:
+    mov     eax,9
+    call    RandomRange
+    loop    r4
+    mov     esi, OFFSET dict.solutions
+    mov     edx,0
+    mov     ebx,9
+    imul    ebx
+    add     esi, eax
+    add     esi, batl_ship.x_tmp
+    mov     ecx,4
+fill_x:
+    ; mov     [flag],0
+    ; call    check_if_taken
+    ; mov     al,[flag]
+    ; cmp     al,1
+    ; je      recurse
+    ; mov     al,'X'
+    mov     [esi],al
+    inc     esi
+    loop    fill_x
+    ret
+randomize_bship     ENDP
+;-------------------------------------------
+;randomizes destroyer 4 WORKS
+;must check for anything in the way 
+randomize_destroyer     PROC
+    call    random_direction
+    mov     eax,[orientation]
+    cmp     eax,0
+    je      vertical_random
+    jne     horizontal_random
+    ret
+vertical_random:
+;-------------------------------------------
+;random x's
+    mov     eax,9
+    mov     ecx,1337
+r1:
+    mov     eax,9
+    call    RandomRange
+    loop    r1
+;-------------------------------------------
+;random y's
+    mov     [destroyer.x_tmp],eax
+    mov     eax,3
+    mov     ecx,1337
+r2:
+    mov     eax,3
+    call    RandomRange
+    loop    r2
+    mov     esi, OFFSET dict.solutions
+    mov     edx,0
+    mov     ebx,9
+    imul    ebx
+    add     esi,eax
+    add     esi, destroyer.x_tmp
+    mov     ecx,3
+fill_y:
+    mov     [flag],0
+    call    check_if_taken
+    mov     al,[flag]
+    cmp     al,1
+    je      recurse_dest
+    mov     al,'X'
+    mov     [esi],al
+    add     esi, 9
+    loop    fill_y
+    ret
+recurse_dest:    ;if esi is occupied already
+    call    randomize_destroyer
+    ret
+horizontal_random:
+;-------------------------------------------
+;random x's
+    mov     eax,3
+    mov     ecx,2121
+r3:
+    mov     eax,3
+    call    RandomRange
+    loop    r3
+;-------------------------------------------
+;random y's
+    mov     [destroyer.x_tmp], eax
+    mov     eax,9
+    mov     ecx,1337
+r4:
+    mov     eax,9
+    call    RandomRange
+    loop    r4
+    mov     esi, OFFSET dict.solutions
+    mov     edx,0
+    mov     ebx,9
+    imul    ebx
+    add     esi, eax
+    add     esi, destroyer.x_tmp
+    mov     ecx,3
+fill_x:
+    mov     [flag],0
+    call    check_if_taken
+    mov     al,[flag]
+    cmp     al,1
+    je      recurse_1
+recurse_1:    ;if esi is occupied already
+    call    randomize_destroyer
+    ret
+    
+    mov     al,'X'
+    mov     [esi],al
+    inc     esi
+    loop    fill_x
+    ret
+randomize_destroyer     ENDP
+;-------------------------------------------
+;randomizes battleship 4 WORKS
+;must check for anything in the way 
+randomize_sub     PROC
+    call    random_direction
+    mov     eax,[orientation]
+    cmp     eax,0
+    je      vertical_random
+    jne     horizontal_random
+    ret
+vertical_random:
+;-------------------------------------------
+;random x's
+    mov     eax,9
+    mov     ecx,1337
+r1:
+    mov     eax,9
+    call    RandomRange
+    loop    r1
+;-------------------------------------------
+;random y's
+    mov     [submarine.x_tmp],eax
+    mov     eax,3
+    mov     ecx,1337
+r2:
+    mov     eax,3
+    call    RandomRange
+    loop    r2
+    mov     esi, OFFSET dict.solutions
+    mov     edx,0
+    mov     ebx,9
+    imul    ebx
+    add     esi,eax
+    add     esi, submarine.x_tmp
+    mov     ecx,3
+fill_y:
+    mov     [flag],0
+    call    check_if_taken
+    mov     al,[flag]
+    cmp     al,1
+    je      recurse_sub_1
+    mov     al,'X'
+    mov     [esi],al
+    add     esi, 9
+    loop    fill_y
+    ret
+recurse_sub_1:    ;if esi is occupied already
+    call    randomize_sub
+    ret
+horizontal_random:
+;-------------------------------------------
+;random x's
+    mov     eax,3
+    mov     ecx,2121
+r3:
+    mov     eax,3
+    call    RandomRange
+    loop    r3
+;-------------------------------------------
+;random y's
+    mov     [submarine.x_tmp], eax
+    mov     eax,9
+    mov     ecx,1337
+r4:
+    mov     eax,9
+    call    RandomRange
+    loop    r4
+    mov     esi, OFFSET dict.solutions
+    mov     edx,0
+    mov     ebx,9
+    imul    ebx
+    add     esi, eax
+    add     esi, submarine.x_tmp
+    mov     ecx,3
+fill_x:
+    mov     [flag],0
+    call    check_if_taken
+    mov     al,[flag]
+    cmp     al,1
+    je      recurse_sub_2
+    mov     al,'X'
+    mov     [esi],al
+    inc     esi
+    loop    fill_x
+    ret
+recurse_sub_2:    ;if esi is occupied already
+    call    randomize_sub
+    ret
+randomize_sub     ENDP
+;-------------------------------------------
+;randomizes battleship 4 WORKS
+;must check for anything in the way 
+randomize_patrol_boat     PROC
+    call    random_direction
+    mov     eax,[orientation]
+    cmp     eax,0
+    je      vertical_random
+    jne     horizontal_random
+    ret
+vertical_random:
+;-------------------------------------------
+;random x's
+    mov     eax,9
+    mov     ecx,1337
+r1:
+    mov     eax,9
+    call    RandomRange
+    loop    r1
+;-------------------------------------------
+;random y's
+    mov     [patrol.x_tmp],eax
+    mov     eax,2
+    mov     ecx,1337
+r2:
+    mov     eax,2
+    call    RandomRange
+    loop    r2
+    mov     esi, OFFSET dict.solutions
+    mov     edx,0
+    mov     ebx,9
+    imul    ebx
+    add     esi,eax
+    add     esi, patrol.x_tmp
+    mov     ecx,2
+fill_y:
+    mov     [flag],0
+    call    check_if_taken
+    mov     al,[flag]
+    cmp     al,1
+    je      recurse_pat_1
+    mov     al,'X'
+    mov     [esi],al
+    add     esi, 9
+    loop    fill_y
+    ret
+recurse_pat_1:    ;if esi is occupied already
+    call    randomize_patrol_boat
+    ret
+horizontal_random:
+;-------------------------------------------
+;random x's
+    mov     eax,3
+    mov     ecx,2121
+r3:
+    mov     eax,2
+    call    RandomRange
+    loop    r3
+;-------------------------------------------
+;random y's
+    mov     [submarine.x_tmp], eax
+    mov     eax,9
+    mov     ecx,1337
+r4:
+    mov     eax,9
+    call    RandomRange
+    loop    r4
+    mov     esi, OFFSET dict.solutions
+    mov     edx,0
+    mov     ebx,9
+    imul    ebx
+    add     esi, eax
+    add     esi, submarine.x_tmp
+    mov     ecx,2
+fill_x:
+    mov     [flag],0
+    call    check_if_taken
+    mov     al,[flag]
+    cmp     al,1
+    je      recurse_pat_2
+    mov     al,'X'
+    mov     [esi],al
+    inc     esi
+    loop    fill_x
+    ret
+recurse_pat_2:    ;if esi is occupied already
+    call    randomize_patrol_boat
+    ret
+randomize_patrol_boat     ENDP
+;-------------------------------------------
 ;  get user turn x coordinate
 ;  will be called until the user enters 
 ;  a value from 1-9
@@ -294,13 +664,6 @@ invalid_in_y:
     call    get_turn_y
     ret
 get_turn_y       ENDP
-
-;-------------------------------------------
-; TODO update board
-update_board    PROC
-    ret
-update_board    ENDP
-;-------------------------------------------
 print_banner    PROC
     mov     eax,cyan + (black * 16)
     call    SetTextColor
@@ -350,6 +713,16 @@ default_text_color  PROC
     call   SetTextColor
     ret
 default_text_color  ENDP
+red_text_color  PROC
+    mov     eax,red + (black * 16)
+    call    SetTextColor
+    ret
+red_text_color  ENDP
+gray_text_color  PROC
+    mov     eax,gray + (black * 16)
+    call    SetTextColor
+    ret
+gray_text_color  ENDP
 ;-------------------------------------------
 ;if 0 horizontal
 ;if 1 vertical
@@ -424,5 +797,97 @@ drb_y_sub:
     call    default_text_color
     ret
 draw_board_y_sol       ENDP
+;-------------------------------------------
+; checks if anything is in the way, returns true (1) 
+; check eax
+check_if_taken  PROC
+    mov     al,'X'
+    mov     dl,[esi]
+    cmp     dl,al
+    je      reroll
+    jne     confirmed
+    ret
+reroll:
+    ;if [esi] is taken simply try again until it isn't 
+    mov     [flag],1
+    ret
+confirmed:
+    ;if jump here then continue adding ship to board
+    ret
+check_if_taken  ENDP
+random_ships_all    PROC
+    call    randomize_carrier
+    call    randomize_bship
+    call    randomize_destroyer
+    call    randomize_sub
+    call    randomize_patrol_boat
+    mov     al,236
+    call    WriteChar
+    call    DumpRegs
+    ret
+random_ships_all    ENDP
+; check_if_hit    PROC
+;     mov     esi, OFFSET dict.solutions
+;     mov     edi, OFFSET dict.display
+;     mov     al, user_event.user_in_x
+;     mov     ebx, DWORD PTR al
+
+;     ret     
+; check_if_hit    ENDP
+ask_user_play   PROC
+    mov     ebx,OFFSET msg_box_caption
+    mov     edx,OFFSET msg_box_question
+    call    MsgBoxAsk
+    cmp     eax,6
+    je      user_wants_in
+    jne     user_quit
+    ret
+user_wants_in:
+    mov     ebx, OFFSET msg_box_caption
+    mov     edx, OFFSET msg_box_confirmed
+    call    MsgBox
+    ret
+user_quit:
+    INVOKE  ExitProcess,0
+ask_user_play   ENDP
+;asks the user if the game should make it harder
+;this just reduces the amount of turns they can take 
+;75 55 35 
+;E  I  H
+ask_user_diff   PROC
+    mov     edx,OFFSET diff
+    call    WriteString
+    call    crlf
+    mov     edx,OFFSET user_intruc.prompt
+    call    WriteString
+    call    ReadChar
+    cmp     al,'E'
+    je      easy 
+    jg      valid_option
+    jl      invalid_option
+    ret
+valid_option:
+    cmp     al,'H'
+    je      hard
+    jg      valid_option_2
+    ret
+valid_option_2:
+    cmp     al,'I'
+    je      medium
+    jne     invalid_option
+    ret
+easy:
+    mov     [user_diff],75
+    ret
+medium:
+    mov     [user_diff],55
+    ret
+hard:
+    mov     [user_diff],35
+    ret
+invalid_option:
+    call    ask_user_diff
+    ret
+ask_user_diff   ENDP
 end     main
 
