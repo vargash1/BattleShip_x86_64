@@ -15,10 +15,10 @@ You may also need 2012 Build Tools to run this successfully! These can be found 
 ```
 
 Some Sample Runs:
-![alt text](https://github.com/vargash1/BattleShip_x86_64/blob/master/images/Screenshot%20from%202014-12-16%2023:09:26.png "Sample Run n")
-![alt text](https://github.com/vargash1/BattleShip_x86_64/blob/master/images/Screenshot%20from%202014-12-16%2023:09:35.png "Sample Run n")
-![alt text](https://github.com/vargash1/BattleShip_x86_64/blob/master/images/Screenshot%20from%202014-12-16%2023:09:57.png "Sample Run n")
-![alt text](https://github.com/vargash1/BattleShip_x86_64/blob/master/images/Screenshot%20from%202014-12-16%2023:10:06.png "Sample Run n")
+![alt text](https://github.com/vargash1/BattleShip_x86_64/blob/master/images/Screenshot%20from%202014-12-16%2023:09:26.png "Sample Runtime!")
+![alt text](https://github.com/vargash1/BattleShip_x86_64/blob/master/images/Screenshot%20from%202014-12-16%2023:09:35.png "Sample Runtime!")
+![alt text](https://github.com/vargash1/BattleShip_x86_64/blob/master/images/Screenshot%20from%202014-12-16%2023:09:57.png "Sample Runtime!")
+![alt text](https://github.com/vargash1/BattleShip_x86_64/blob/master/images/Screenshot%20from%202014-12-16%2023:10:06.png "Sample Runtime!")
 ![alt text](https://github.com/vargash1/BattleShip_x86_64/blob/master/images/Screenshot%20from%202014-12-16%2023:10:09.png"Sample Runtime!")
 ![alt text](https://github.com/vargash1/BattleShip_x86_64/blob/master/images/Screenshot%20from%202014-12-16%2023:10:11.png"Sample Runtime!")
 ![alt text](https://github.com/vargash1/BattleShip_x86_64/blob/master/images/Screenshot%20from%202014-12-16%2023:10:18.png"Sample Runtime!")
