@@ -3,7 +3,7 @@
 ; @Email:  vargash1@wit.edu
 ; @Date:   2014-12-07 13:04:53
 ; @Last Modified by:   vargash1
-; @Last Modified time: 2014-12-16 17:48:12
+; @Last Modified time: 2014-12-16 23:08:51
 INCLUDE Irvine32.inc
 ;-------------------------------------------
 ;ships
@@ -33,7 +33,7 @@ INCLUDE Irvine32.inc
         board_x     BYTE    "  1 2 3 4 5 6 7 8 9",0
         board_x_2   BYTE    "  __________________",0
         board_bot   BYTE    "  ------------------",0
-        board_y     BYTE    "A","B","C","D","E","F","G","H","I"
+        board_y     BYTE    "1","2","3","4","5","6","7","8","9"
         vtab        BYTE    '|'
     Gameboard  ENDS
 ;-------------------------------------------
@@ -42,11 +42,12 @@ INCLUDE Irvine32.inc
         miss        BYTE    'O'
         hit         BYTE    'X'
         ships_hit   BYTE     0      ; if this == 17 game is over 
-        user_in_x   BYTE     0
-        user_in_y   BYTE     0
+        user_in_x   DWORD     0
+        user_in_y   DWORD     0
         hard        DWORD    35
         medium      DWORD    55
         easy        DWORD    75
+
     Event ENDS      
 ;-------------------------------------------
 ;user instructions
@@ -94,10 +95,14 @@ INCLUDE Irvine32.inc
     flag        BYTE     0          ;used to check spots
     msg_box_caption     BYTE     "Welcome to BattleShip in x86_64 MASM assmembly",0
     msg_box_question    BYTE     "Would you like to play my game?",0
-    msg_box_confirmed   BYTE     236,"Alright! Hope you have fun!",236,0
+    msg_box_confirmed   BYTE     "Alright! Hope you have fun!",0
     diff        BYTE    "Choose the difficulty of the game, this will limit the turns you can take!",0Dh,0Ah   
                 BYTE    "(H)ard, (I)ntermediate, or (E)asy? Enter the character to select!",0Dh,0Ah,0
     user_diff   DWORD   ?
+    testo       BYTE    0
+    hold        DWORD   0
+    win_msg_1   BYTE    "You Won! Congrats!",0
+    win_msg_2   BYTE    "Nice Job!",0
 .code
 main             PROC
     call    ask_user_play
@@ -109,10 +114,16 @@ main             PROC
     call    user_intructions
     call    draw_board_start
     call    draw_board_active    
-    call    get_turn_x
-    call    get_turn_y
     call    random_ships_all
     call    draw_board_active
+    mov     ecx,user_diff
+run_game:
+    mov     [hold],ecx
+    call    game_runtime
+    call    check_if_won
+    mov     ecx,[hold]
+    loop    run_game
+
     INVOKE  ExitProcess,0
 main             ENDP
 ;-------------------------------------------
@@ -624,14 +635,14 @@ get_turn_x       PROC
     call    crlf
     mov     edx, OFFSET user_intruc.prompt
     call    WriteString
-    call    ReadChar
-    cmp     al,'1'
+    call    ReadInt
+    cmp     eax,1
     jl      invalid_in_x
-    cmp     al,'9'
+    cmp     al,9
     jg      invalid_in_x
-    mov     [user_event.user_in_x], al
-    mov     al, [user_event.user_in_x]
-    call    WriteChar
+    mov     [user_event.user_in_x], eax
+    mov     eax, [user_event.user_in_x]
+    call    WriteInt
     call    crlf        
     ret
 invalid_in_x:
@@ -648,14 +659,14 @@ get_turn_y       PROC
     call    crlf
     mov     edx, OFFSET user_intruc.prompt
     call    WriteString
-    call    ReadChar
-    cmp     al,'A'
+    call    ReadInt
+    cmp     eax,1
     jl      invalid_in_y
-    cmp     al,'I'
+    cmp     eax,9
     jg      invalid_in_y
-    mov     [user_event.user_in_y], al
-    mov     al, [user_event.user_in_y]
-    call    WriteChar
+    mov     [user_event.user_in_y], eax
+    mov     eax, [user_event.user_in_y]
+    call    WriteInt
     call    crlf        
     ret
 invalid_in_y:
@@ -765,7 +776,7 @@ draw_board_y_sol       PROC
     mov     eax,gray + (black * 16)
     call    SetTextColor
     mov     esi, OFFSET new_board.board_y  
-    mov     edi, OFFSET dict.solutions
+    mov     edi, OFFSET dict.display
     mov     ecx, LENGTHOF new_board.board_y
     mov     [cnt],ecx
 ; main loop
@@ -887,8 +898,56 @@ invalid_option:
     call    ask_user_diff
     ret
 ask_user_diff   ENDP
-;TODO UPDATE the board with ecx, user_diff!! and we are donnerino
-;TODO use logic operator AND to convert ***************
-;lowercase to uppercase!!!
+check_if_ship_hit   PROC
+    mov     esi,OFFSET dict.solutions
+    mov     edi,OFFSET dict.display
+    mov     eax, user_event.user_in_y
+    sub     eax,1
+    mov     ebx,9
+    mov     edx,0
+    mul     ebx
+    mov     ebx,user_event.user_in_x
+    dec     ebx
+    add     eax,ebx
+    call    WriteInt
+    add     esi,eax
+    mov     bl,'X'
+    cmp     [esi],bl
+    je      hit_mark
+    jne     miss
+    ret
+hit_mark:
+    add     edi,eax
+    mov     bl,'X'
+    mov     [edi],bl
+    mov     al,user_event.ships_hit
+    inc     al
+    mov     [user_event.ships_hit],al
+    ret
+miss:
+    add     edi,eax
+    mov     bl,'O'
+    mov     [edi],bl
+    ret
+check_if_ship_hit   ENDP
+game_runtime    PROC
+    call    get_turn_x
+    call    get_turn_y
+    call    check_if_ship_hit
+    call    draw_board_active
+    ret
+game_runtime    ENDP
+check_if_won    PROC
+    mov     al,user_event.ships_hit
+    cmp     al,17
+    je      victory
+    ret
+victory:
+    mov     ebx,OFFSET win_msg_2
+    mov     edx,OFFSET win_msg_1
+    call    MsgBox
+    ;msg box saying they won and will exit!
+    Invoke  ExitProcess,0
+check_if_won    ENDP
 end     main
 
