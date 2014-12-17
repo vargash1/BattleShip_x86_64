@@ -1,6 +1,6 @@
 #BattleShip x86_64 MASM Format
 This is the board game Battleship in x86_64 assembly(MASM FORMAT).
-####- Made by and will be improved by Hector Vargas.
+####- Made by Hector Vargas.
 
 You will need the Irvine 32 Libary to run this, which is located [here.](http://www.kipirvine.com/asm/examples/)
 This is in MASM format, it has been tested in Windows only. Tests have been successful in Windows 7 x32,x64 Windows 8 & 8.1 x32 x64!!
