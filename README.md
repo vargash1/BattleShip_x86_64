@@ -8,7 +8,7 @@ This is in MASM format, it has been tested in Windows only. Tests have been succ
 ####'O's represent Misses
 I will improve this game in the future, for now a working copy will do.
 I used Visual Studio 2013 Free Edition to assemble and run the code.
-You may also need 2012 Build Tools to run this successfully! These can be found [here.](http://www.microsoft.com/en-us/download/details.aspx?id=38807)
+You may also need Visual Studio 2012 Build Tools to run this successfully! These can be found [here.](http://www.microsoft.com/en-us/download/details.aspx?id=38807)
 
 ####Randomization
 The game will use 1's and 0's to determine if the ship will be placed on the board in vertical or horizontal position. Then using the firstmost part of the ship(ex : aircraft carrier is 5 slots big, begin with slot 1) will be mapped to some randomly generated integer within the board.
